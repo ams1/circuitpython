@@ -33,8 +33,15 @@
 
 #include "mbedtls/crt_bundle.h"
 
+#if defined(MBEDTLS_SSL_CACHE_C)
+#include "mbedtls/ssl_cache.h"
+#endif
+
 void common_hal_ssl_sslcontext_construct(ssl_sslcontext_obj_t *self) {
     common_hal_ssl_sslcontext_set_default_verify_paths(self);
+#if defined(MBEDTLS_SSL_CACHE_C)
+    mbedtls_ssl_cache_init( &self->cache );
+#endif
 }
 
 void common_hal_ssl_sslcontext_load_verify_locations(ssl_sslcontext_obj_t *self,

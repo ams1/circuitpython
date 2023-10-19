@@ -29,6 +29,9 @@
 
 #include "py/obj.h"
 #include "mbedtls/ssl.h"
+#if defined(MBEDTLS_SSL_CACHE_C)
+#include "mbedtls/ssl_cache.h"
+#endif
 
 typedef struct {
     mp_obj_base_t base;
@@ -37,4 +40,7 @@ typedef struct {
     size_t cacert_bytes;
     int (*crt_bundle_attach)(mbedtls_ssl_config *conf);
     mp_buffer_info_t cert_buf, key_buf;
+#if defined(MBEDTLS_SSL_CACHE_C)
+    mbedtls_ssl_cache_context cache;
+#endif
 } ssl_sslcontext_obj_t;

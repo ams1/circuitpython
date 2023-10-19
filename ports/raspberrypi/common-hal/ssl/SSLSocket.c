@@ -40,6 +40,10 @@
 #include "py/stream.h"
 #include "supervisor/shared/tick.h"
 
+#if defined(MBEDTLS_SSL_CACHE_C)
+#include "mbedtls/ssl_cache.h"
+#endif
+
 #if defined(MBEDTLS_ERROR_C)
 #include "../../lib/mbedtls_errors/mp_mbedtls_errors.c"
 #endif
@@ -55,6 +59,11 @@ STATIC void mbedtls_debug(void *ctx, int level, const char *file, int line, cons
 #else
 #define DEBUG(...) do {} while (0)
 #endif
+
+#if defined(MBEDTLS_SSL_CACHE_C)
+mbedtls_ssl_cache_context cache;
+#endif
+
 
 STATIC NORETURN void mbedtls_raise_error(int err) {
     // _mbedtls_ssl_send and _mbedtls_ssl_recv (below) turn positive error codes from the
@@ -171,6 +180,12 @@ ssl_sslsocket_obj_t *common_hal_ssl_sslcontext_wrap_socket(ssl_sslcontext_obj_t 
         goto cleanup;
     }
 
+#if defined(MBEDTLS_SSL_CACHE_C)
+    mbedtls_ssl_conf_session_cache(&o->conf, &self->cache,
+                                   mbedtls_ssl_cache_get,
+                                   mbedtls_ssl_cache_set);
+#endif
+
     if (self->crt_bundle_attach != NULL) {
         mbedtls_ssl_conf_authmode(&o->conf, MBEDTLS_SSL_VERIFY_REQUIRED);
         self->crt_bundle_attach(&o->conf);
@@ -226,6 +241,9 @@ cleanup:
     mbedtls_x509_crt_free(&o->cacert);
     mbedtls_ssl_free(&o->ssl);
     mbedtls_ssl_config_free(&o->conf);
+#if defined(MBEDTLS_SSL_CACHE_C)
+    mbedtls_ssl_cache_free(&self->cache);
+#endif
     mbedtls_ctr_drbg_free(&o->ctr_drbg);
     mbedtls_entropy_free(&o->entropy);
 
