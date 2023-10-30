@@ -6,7 +6,8 @@ import pathlib
 import subprocess
 
 # Target will be a board, "test", "docs", "mpy-cross-mac", or "windows"
-TARGET = sys.argv[1]
+# TARGET = sys.argv[1]
+TARGET = "raspberry_pi_pico_w"
 
 # Submodules needed by port builds outside of their ports directory.
 # Should we try and detect these?
@@ -42,6 +43,7 @@ PORT_DEPS = {
         "lib/quirc/",
         "lib/tinyusb/",
         "data/nvm.toml/",
+        "lib/micropython-lib/",
     ],
     "silabs": ["extmod/ulab/", "data/nvm.toml/"],
     "stm": ["extmod/ulab/", "lib/mp3/", "lib/protomatter/", "lib/tinyusb/", "data/nvm.toml/"]
