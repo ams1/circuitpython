@@ -26,4 +26,4 @@ CFLAGS += -DCYW43_PIN_WL_HOST_WAKE=24 -DCYW43_PIN_WL_REG_ON=23 -DCYW43_WL_GPIO_C
 CFLAGS += -DCIRCUITPY_FIRMWARE_SIZE='(1536 * 1024)'
 # Include these Python libraries in firmware.
 FROZEN_MPY_DIRS += $(TOP)/frozen/Adafruit_CircuitPython_HID
-FROZEN_MPY_DIRS += $(TOP)/frozen/Adafruit_CircuitPython_HTTPServer
+# FROZEN_MPY_DIRS += $(TOP)/frozen/Adafruit_CircuitPython_HTTPServer
